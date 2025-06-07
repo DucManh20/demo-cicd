@@ -1,0 +1,38 @@
+name: CI/CD for NestJS with Render & Slack
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Trigger Render deploy
+        run: |
+          curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+          -H 'Accept: application/json' \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
+
+      # - name: Notify Slack if deploy success
+      #   if: ${{ success() }}
+      #   run: |
+      #     curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+      #     -H 'Content-type: application/json' \
+      #     --data '{"text":"✅ Deploy thành công ứng dụng NestJS lên Render!"}'
