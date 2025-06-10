@@ -6,36 +6,53 @@ on:
       - master
 
 jobs:
-  build-test-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout source code
+      - name: 🛎 Checkout source code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: 🔧 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm install
 
-      - name: Run lint
+      - name: 🔍 Run lint
         run: npm run lint
-        
-      - name: Run tests
+
+      - name: 🧪 Run tests
         run: npm run test
 
-      - name: Trigger Render deploy
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: 🚀 Trigger Render deploy
         run: |
           curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
           -H 'Accept: application/json' \
           -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
 
-      # - name: Notify Slack if deploy success
-      #   if: ${{ success() }}
-      #   run: |
-      #     curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
-      #     -H 'Content-type: application/json' \
-      #     --data '{"text":"✅ Deploy thành công ứng dụng NestJS lên Render!"}'
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build-and-test, deploy]
+    if: always()
+    steps:
+      - name: ✅ Notify Slack if success
+        if: ${{ success() }}
+        continue-on-error: true
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+          -H 'Content-type: application/json' \
+          --data '{"text":"✅ *Deploy thành công* ứng dụng NestJS lên Render!"}'
+
+      - name: ❌ Notify Slack if failure
+        if: ${{ failure() }}
+        continue-on-error: true
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+          -H 'Content-type: application/json' \
+          --data '{"text":"❌ *Deploy thất bại!* Vui lòng kiểm tra lại pipeline CI/CD hoặc cấu hình Render."}'
