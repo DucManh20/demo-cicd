@@ -47,7 +47,16 @@ jobs:
         run: |
           curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
           -H 'Content-type: application/json' \
-          --data '{"text":"✅ *Deploy thành công* ứng dụng NestJS lên Render!"}'
+          --data "{
+            \"text\": \"✅ *Deployment Successful*\n
+            *📦 App:* NestJS Application\n
+            *🌍 Environment:* Production\n
+            *🌱 Branch:* ${{ github.ref_name }}\n
+            *🔀 Commit:* [${{ github.sha::0:7 }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\n
+            *👤 Triggered by:* ${{ github.actor }}\n
+            *📅 Time:* $(date -u +'%Y-%m-%d %H:%M:%S UTC')\n
+            *🔗 Workflow:* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+          }"
 
       - name: ❌ Notify Slack if failure
         if: ${{ failure() }}
@@ -55,4 +64,15 @@ jobs:
         run: |
           curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
           -H 'Content-type: application/json' \
-          --data '{"text":"❌ *Deploy thất bại!* Vui lòng kiểm tra lại pipeline CI/CD hoặc cấu hình Render."}'
+          --data "{
+            \"text\": \"❌ *Deployment Failed*\n
+            *📦 App:* NestJS Application\n
+            *🌍 Environment:* Production\n
+            *🌱 Branch:* ${{ github.ref_name }}\n
+            *🔀 Commit:* [${{ github.sha::0:7 }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\n
+            *👤 Triggered by:* ${{ github.actor }}\n
+            *📅 Time:* $(date -u +'%Y-%m-%d %H:%M:%S UTC')\n
+            *🔗 Workflow:* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
+            Please check the CI/CD logs or your Render config.\"
+          }"
+
