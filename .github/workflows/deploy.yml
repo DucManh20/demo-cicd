@@ -52,7 +52,6 @@ jobs:
             *📦 App:* NestJS Application\n
             *🌍 Environment:* Production\n
             *🌱 Branch:* ${{ github.ref_name }}\n
-            *🔀 Commit:* [${{ github.sha::0:7 }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\n
             *👤 Triggered by:* ${{ github.actor }}\n
             *📅 Time:* $(date -u +'%Y-%m-%d %H:%M:%S UTC')\n
             *🔗 Workflow:* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
@@ -69,7 +68,6 @@ jobs:
             *📦 App:* NestJS Application\n
             *🌍 Environment:* Production\n
             *🌱 Branch:* ${{ github.ref_name }}\n
-            *🔀 Commit:* [${{ github.sha::0:7 }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\n
             *👤 Triggered by:* ${{ github.actor }}\n
             *📅 Time:* $(date -u +'%Y-%m-%d %H:%M:%S UTC')\n
             *🔗 Workflow:* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
