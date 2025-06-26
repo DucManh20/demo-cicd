@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { TransformableInfo } from 'winston-slack-webhook-transport';
+import { TransformableInfo as LogformTransformableInfo } from 'logform';
 import * as SlackHook from 'winston-slack-webhook-transport';
 import * as dotenv from 'dotenv';
 import * as process from 'process';
 dotenv.config();
 
-const commonLogFormat = (info: TransformableInfo) => {
+const commonLogFormat = (info: LogformTransformableInfo) => {
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const contextLog = info.context ? `[Context]: ${info.context}` : '';
   const baseLog = `[${info.timestamp}] [${info.level}] ${info.message}`;
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const traceLog = info.trace ? `\n[Trace]: ${info.trace}` : '';
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const stackLog = info.stack ? `\n[Stack]: ${info.stack}` : '';
 
   if (process.env.IS_SEND_NOTIFICATION_SLACK === 'true') {

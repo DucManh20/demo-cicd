@@ -9,7 +9,6 @@ export class UsersService {
   }
 
   findAll() {
-    throw new HttpException('exception test 123', 400);
     return [
       {
         id: 1,
@@ -23,6 +22,7 @@ export class UsersService {
   }
 
   findOne(id: number) {
+    throw new HttpException('User has been removed from the system', 400);
     return `This action returns a #${id} user`;
   }
 
