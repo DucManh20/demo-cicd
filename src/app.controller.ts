@@ -14,4 +14,14 @@ export class AppController {
   health(): object {
     return { status: 'ok', timestamp: new Date().toISOString() };
   }
+
+  @Get('test')
+  test(): object {
+    return { status: ' test ok', timestamp: new Date().toISOString() };
+  }
+
+  @Get('test1')
+  test1(): object {
+    return { status: ' test ok', timestamp: new Date().toISOString() };
+  }
 }
